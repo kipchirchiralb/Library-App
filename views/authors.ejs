@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library App</title>
+</head>
+<body>
+    <header>
+        <a href="/" id="logo"> LibApp </a>
+        <nav>
+            <a href="/authors">Authors</a>
+            <a href="/books">Books</a>
+            <a href="/profile">My Profile</a>
+
+        </nav>
+    </header>
+    <main>
+        <section id="hero">
+            <h1>Authors</h1>
+            <form action="/newauthor" method="post" >
+                <label for="id">ID</label>
+                <input type="number" name="id" id="id" required>
+                <label for="name">Name</label>
+                <input type="text" name="name" id="name" required>
+                <label for="YOB">YOB</label>
+                <select name="YOB" id="YOB">
+                    <% for(let year = 2024; year>1970; year--){ %>
+                        <option value="<%=year%>"><%=year%></option>
+                    <%}%>
+                </select>
+                <label for="nationality">Nationality</label>
+                <input type="text" name="nationality" id="nationality" required>
+                <label for="bio">Biography</label>
+                <textarea name="bio" id="bio" cols="30" rows="4" required></textarea>
+                <input type="submit" value="Add Author">
+            </form>
+            <div class="authors">
+              
+                <%  if(locals.authors){  %>
+                    <ul>
+                        <% locals.authors.forEach(auth=>{ %>
+                        <li> 
+                            <h2><%= auth.FullName %></h2>
+                            <p>Nationality:<%= auth.Nationality %></p>
+                            <p>YOB: <%= auth.YOB %></p>
+                            <p>Biography</p>
+                            <p> <%= auth.Biography %> </p>
+                        </li>
+                        <% }) %>
+                    </ul>
+                <% }else{ %>
+                    <h2>Currently there are no authors!!</h2>
+                <% } %>
+            
+            
+                <style>
+                    ul{
+                        display: flex;
+                        flex-wrap: wrap;
+                    }
+                    li{
+                        width: 22%;
+                    }
+                </style>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p> LibApp &copy; <%= new Date().getFullYear() %> . All rights Reserved. </p>
+    </footer>
+</body>
+</html>
