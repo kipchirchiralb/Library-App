@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+</head>
+<body>
+    <%- include('header.ejs') %>
+    <h1>Signup </h1>
+    <form action="/signup" method="post">
+        <div>
+            <label for="fullname">Full Name</label>
+            <input type="text" name="fullname" id="fullname" required>
+        </div>
+        <div>
+            <label for="address">Home Address</label>
+            <input type="text" name="address" id="address" required>
+        </div>
+        <div>
+            <label for="phone">Phone Number</label>
+            <input type="text" name="phone" id="phone" required>
+        </div>
+        <div>
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" required>
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required>
+            <p id="passworderror"></p>
+        </div>
+        <div>
+            <label for="confirmpassword">Confirm Password</label>
+            <input type="password" name="confirmpassword" id="confirmpassword" required>           
+        </div>
+        <input type="submit" value="Sign Up">
+
+    </form>
+    <p> Already have an account? <a href="/signin">Sign In</a> </p>
+    <script>
+        const passwordError = document.getElementById("passworderror")
+        const passwordInput = document.getElementById("password")
+        passwordInput.addEventListener("input", ()=>{
+                if(passwordInput.value.length<8){
+                    passwordError.textContent = "Password must be over 8 charachters"
+                }else{
+                    passwordError.textContent = ""
+                }
+        })
+        document.getElementById("confirmpassword").addEventListener("input", ()=>{
+            if(passwordInput.value!== document.getElementById("confirmpassword").value){
+                    passwordError.textContent = "Password AND cONFIRM PASSWORD MUST MATCH"
+                }else{
+                    passwordError.textContent = ""
+                }
+        })
+    </script>
+</body>
+</html>

@@ -1,9 +1,9 @@
 const express= require("express")
+const bcrypt = require('bcrypt');
 const mysql = require("mysql")
 const dbconn = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "",
     database: "librarydb"
 })
 // creating app
@@ -26,6 +26,39 @@ app.use((req,res,next)=>{
 app.get("/",(req,res)=>{
     res.render("index.ejs")
 })
+
+app.get("/signup", (req,res)=>{
+    res.render("signup.ejs")
+})
+app.get("/signin", (req,res)=>{
+    res.render("signin.ejs")
+})
+
+app.post("/signup", (req,res)=>{
+    // get data sent from html form - through req.body -- 
+    // //check if email provided is in the database(already used/registered)
+    // hash password
+    //store data/register new user   then redirect them to login/signin
+    console.log(req.body);
+    dbconn.query(`SELECT Email FROM members WHERE Email = "${req.body.email}" `, (err, result)=>{
+        if(err){
+            res.status(500).send("Server Error")
+        }else{
+            if(result.length>0){
+                // email found
+                res.render("signup.ejs", {errorMessage: "Email Already in Use. Signup"})
+            }else{
+                // email not found --- then has password using bcrypt(node module)
+                const hashedPassword = bcrypt.hashSync(req.body.password, 5);
+                // now store the data -- remember hashed password and default club 99-ordinary
+                dbconn.query(`INSERT INTO members(FullName,Address,Phone,Email,Password,Club)VALUES("${req.body.fullname}","${req.body.address}","${req.body.phone}","${req.body.email}","${hashedPassword}",99 )`, (error)=>{
+                    if(error) res.status(500).send("Server Error")
+                    res.redirect("/signin")
+                })
+            }
+        }
+    })
+ })
 
 app.get("/authors",(req,res)=>{
     dbconn.query("SELECT * FROM authors", (err,authors)=>{
