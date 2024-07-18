@@ -13,12 +13,12 @@ const app = express()
 // Parse URL-encoded bodies (for form data)
 app.use(express.urlencoded({ extended: true }));
 app.use((req,res,next)=>{
-    console.log(req.query.q);
-    console.log(req.headers["user-agent"]);
-    console.log(req.headers["content-type"]);
-    // console.log(req.headers.location);
-    console.log("Cureent request path/route ",  req.path );
-    // res -- 
+    // console.log(req.query.q);
+    // console.log(req.headers["user-agent"]);
+    // console.log(req.headers["content-type"]);
+    // // console.log(req.headers.location);
+    // console.log("Cureent request path/route ",  req.path );
+    // // res -- 
     next()
 })
 
@@ -39,11 +39,11 @@ app.post("/signup", (req,res)=>{
     // //check if email provided is in the database(already used/registered)
     // hash password
     //store data/register new user   then redirect them to login/signin
-    console.log(req.body);
     dbconn.query(`SELECT Email FROM members WHERE Email = "${req.body.email}" `, (err, result)=>{
         if(err){
             res.status(500).send("Server Error")
         }else{
+            console.log( "Result from DB checking email:  ", result);
             if(result.length>0){
                 // email found
                 res.render("signup.ejs", {errorMessage: "Email Already in Use. Signup"})
@@ -52,10 +52,37 @@ app.post("/signup", (req,res)=>{
                 const hashedPassword = bcrypt.hashSync(req.body.password, 5);
                 // now store the data -- remember hashed password and default club 99-ordinary
                 dbconn.query(`INSERT INTO members(FullName,Address,Phone,Email,Password,Club)VALUES("${req.body.fullname}","${req.body.address}","${req.body.phone}","${req.body.email}","${hashedPassword}",99 )`, (error)=>{
-                    if(error) res.status(500).send("Server Error")
-                    res.redirect("/signin")
+                    if(error) {
+                        res.status(500).send("Server Error")
+                    }else{
+                        res.redirect("/signin")
+                    }
                 })
             }
+        }
+    })
+ })
+
+ app.post("/signin", (req,res)=>{
+    // recieve emai and pasword -- req.body
+    // check if email is registered
+    // compare passwords (from req.body and from database-- -bcrypt.compaaresync)
+    // if correct-- login/ create a session for them ------- What are sessions(Why is http stateless), what are cookies in web
+    console.log(req.body);
+    dbconn.query(`SELECT * FROM members WHERE Email = "${req.body.email}"`, (error, member)=>{
+        if(error){
+            console.log(error);
+            res.status(500).send("Server Error")
+        }else{
+            console.log(member);
+            if(member.length==0){
+                res.render("signin.ejs", {errorMessage: "Email not Registered"})
+            }else{
+                //compare
+                let passwordMatch = bcrypt.compareSync(req.body.password, member[0].password)
+                console.log(passwordMatch);
+                res.redirect("/")
+            }            
         }
     })
  })

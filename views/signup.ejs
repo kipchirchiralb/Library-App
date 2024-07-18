@@ -9,6 +9,10 @@
 <body>
     <%- include('header.ejs') %>
     <h1>Signup </h1>
+    <% if(locals.errorMessage){ %>
+        <p style="color: orangered;"><%= locals.errorMessage%>  </p>
+    <% } %>
+
     <form action="/signup" method="post">
         <div>
             <label for="fullname">Full Name</label>
