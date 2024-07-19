@@ -1,5 +1,6 @@
 const express= require("express")
 const bcrypt = require('bcrypt');
+const session = require("express-session")
 const mysql = require("mysql")
 const dbconn = mysql.createConnection({
     host: "localhost",
@@ -12,13 +13,16 @@ const app = express()
 // app middlewares
 // Parse URL-encoded bodies (for form data)
 app.use(express.urlencoded({ extended: true }));
+app.use(session({
+    secret: 'yourencryptionkey',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+  }))
 app.use((req,res,next)=>{
-    // console.log(req.query.q);
-    // console.log(req.headers["user-agent"]);
-    // console.log(req.headers["content-type"]);
-    // // console.log(req.headers.location);
-    // console.log("Cureent request path/route ",  req.path );
-    // // res -- 
+   if(req.session && req.session.user){
+    res.locals.user = req.session.user
+   }
     next()
 })
 
@@ -80,8 +84,13 @@ app.post("/signup", (req,res)=>{
             }else{
                 //compare
                 let passwordMatch = bcrypt.compareSync(req.body.password, member[0].password)
-                console.log(passwordMatch);
-                res.redirect("/")
+                if(passwordMatch){
+                    // initiate a session
+                    req.session.user = member // update headers with a session id cookie
+                    res.redirect("/")
+                }else{
+                    res.render("signin.ejs", {errorMessage: "Incorrect Password!"})
+                }
             }            
         }
     })
