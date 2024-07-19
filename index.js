@@ -20,10 +20,20 @@ app.use(session({
     cookie: { secure: false }
   }))
 app.use((req,res,next)=>{
+    const privateRoutes = ["/profile"] 
+    const adminRoutes = [ "/newauthor", "/aproveuser", "/completeorder" ]
    if(req.session && req.session.user){
     res.locals.user = req.session.user
-   }
+    if(req.session.user.Email !== "admin@gmail.com" && adminRoutes.includes(req.path)){
+        res.status(401).send("Unauthorized Access. Only admins allowed.")
+    }else{
+        next()
+    }
+   }else if(privateRoutes.includes(req.path) || adminRoutes.includes(req.path)){
+    res.status(401).send("Unauthorized Access. Login First")
+   }else{
     next()
+   }
 })
 
 // app routes
@@ -86,7 +96,7 @@ app.post("/signup", (req,res)=>{
                 let passwordMatch = bcrypt.compareSync(req.body.password, member[0].password)
                 if(passwordMatch){
                     // initiate a session
-                    req.session.user = member // update headers with a session id cookie
+                    req.session.user = member[0] // update headers with a session id cookie
                     res.redirect("/")
                 }else{
                     res.render("signin.ejs", {errorMessage: "Incorrect Password!"})
@@ -95,6 +105,16 @@ app.post("/signup", (req,res)=>{
         }
     })
  })
+
+app.get("/logout", (req,res)=>{
+    req.session.destroy(err=>{
+        if(err){
+            res.status(500).send("Server Error")
+        }else{
+            res.redirect("/")
+        }
+    })
+})
 
 app.get("/authors",(req,res)=>{
     dbconn.query("SELECT * FROM authors", (err,authors)=>{
