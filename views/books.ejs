@@ -15,9 +15,11 @@
                   <% locals.books.forEach(book=>{ %>
                         <div class="book" id="book-<%=book.isbn%>">
                                 <img src="/images/cover1.png" alt="Cover for <%=book.title %>">
-                                <h2><%= book.title%></h2>
+                                <a href="/book/<%=book.isbn%>">
+                                    <h2><%= book.title%></h2>
+                                </a>
                                 <p>Year: <%= book.publication%></p>
-                                <p>Author:  </p>
+                                <p>Author: <%= book.FullName%>  </p>
                         </div>
                     <% }) %>
             </div>

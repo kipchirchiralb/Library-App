@@ -133,8 +133,8 @@ app.get("/authors/:author",(req,res)=>{
     
     res.send("hi there!!")
 })
-app.get("/books/:isbn",(req,res)=>{
-    console.log(req.params.author);
+app.get("/book/:isbn",(req,res)=>{
+    console.log(req.params.isbn); // query parameters
     res.send("hi there!!")
 })
 
