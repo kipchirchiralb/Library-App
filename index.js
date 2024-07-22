@@ -2,6 +2,7 @@ const express= require("express")
 const bcrypt = require('bcrypt');
 const session = require("express-session")
 const mysql = require("mysql")
+const path = require("path")
 const dbconn = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -9,22 +10,24 @@ const dbconn = mysql.createConnection({
 })
 // creating app
 const app = express()
-
+console.log(__dirname);
 // app middlewares
 // Parse URL-encoded bodies (for form data)
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "public")))
 app.use(session({
     secret: 'yourencryptionkey',
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false }
   }))
+  // authorization middleware
 app.use((req,res,next)=>{
     const privateRoutes = ["/profile"] 
     const adminRoutes = [ "/newauthor", "/aproveuser", "/completeorder" ]
    if(req.session && req.session.user){
     res.locals.user = req.session.user
-    if(req.session.user.Email !== "admin@gmail.com" && adminRoutes.includes(req.path)){
+    if(req.session.user.Email !== "john@gmail.com" && adminRoutes.includes(req.path)){
         res.status(401).send("Unauthorized Access. Only admins allowed.")
     }else{
         next()
@@ -150,13 +153,24 @@ app.post("/newauthor",(req,res)=>{
         }
     })
 })
+// joins and types of joins in sql with examples
 app.get("/books",(req,res)=>{
-    console.log("getting books");
-    res.render("books.ejs")
+    dbconn.query("SELECT * FROM books JOIN authors ON books.author = authors.AuthorID", (err,books)=>{
+        if(err){
+            res.status(500).send("Server Error")
+        }else{
+            res.render("books.ejs", {books})
+        }
+    })
 })
 app.get("/profile",(req,res)=>{
-    console.log("getting profile");
-    res.render("profile.ejs")
+    dbconn.query(`SELECT * FROM members WHERE MemberID = ${req.session.user.MemberID}`, (error , member)=>{
+        if(error){
+            res.status(500).send("Server Error")
+        }else{
+            res.render("profile.ejs", {member: member[0]})
+        }
+    })
 })
 
 // last route - 404 page

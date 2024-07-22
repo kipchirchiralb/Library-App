@@ -4,12 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library App</title>
+    <link rel="stylesheet" href="/css/new.css">
 </head>
 <body>
     <%- include('header.ejs') %>
     <main>
         <section id="hero">
             <h1>Books</h1>
+            <div class="books">
+                  <% locals.books.forEach(book=>{ %>
+                        <div class="book" id="book-<%=book.isbn%>">
+                                <img src="/images/cover1.png" alt="Cover for <%=book.title %>">
+                                <h2><%= book.title%></h2>
+                                <p>Year: <%= book.publication%></p>
+                                <p>Author:  </p>
+                        </div>
+                    <% }) %>
+            </div>
         </section>
     </main>
     <footer>

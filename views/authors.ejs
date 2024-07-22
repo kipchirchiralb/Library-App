@@ -10,6 +10,8 @@
     <main>
         <section id="hero">
             <h1>Authors</h1>
+            <!-- optional chaining -->
+            <% if(locals?.user?.Email == "john@gmail.com"){ %>
             <form action="/newauthor" method="post" >
                 <label for="id">ID</label>
                 <input type="number" name="id" id="id" required>
@@ -27,6 +29,7 @@
                 <textarea name="bio" id="bio" cols="30" rows="4" required></textarea>
                 <input type="submit" value="Add Author">
             </form>
+            <% } %>
             <div class="authors">
               
                 <%  if(locals.authors){  %>
