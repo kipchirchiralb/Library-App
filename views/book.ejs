@@ -5,25 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library App</title>
     <style>
-        .flex{display: flex;} .flex>div:first-child{flex:1} .flex>div:last-child{flex:1} .flex>div img{width: 100%;}
+        .flex{display: flex;} 
     </style>
 </head>
 <body>
     <%- include('header.ejs') %>
     <main>
         <section id="hero">
-            <h1><%= locals.book.title ></h1>  
-            <div class="flex">
-                <div>
-                    <img src="/images/cover1.png" alt="Cover Page:  <%= locals.book.title %> ">
-                </div>
-                <div>
-                    <h2> <%= locals.book.FullName %> </h2>
-                    <p> <%= locals.book.publication %> </p>
-                    <a href="/borrow?isbn=<%= locals.book.isbn %>"></a>
-                    <p> <%= locals.book.synopsis %> </p>
-                </div>
-            </div>         
+            <% if(locals.book.length < 1){ %>
+                <h1>No book Found</h1>
+            <% }else{ %>
+                <h1><%= locals.book[0].title %></h1>  
+                <div class="flex">
+                    <div>
+                        <img src="/images/cover1.png" alt="Cover Page:  <%= locals.book[0].title %> ">
+                    </div>
+                    <div>
+                        <h2> <%= locals.book[0].FullName %> </h2>
+                        <p> <%= locals.book[0].publication %> </p>
+                        <a href="/borrow?isbn=<%= locals.book[0].isbn%> " style = "background-color: green; padding: 12px 18px; color: white">BORROW NOW</a>
+                        <p> <%= locals.book[0].synopsis %> </p>
+                    </div>
+                </div>  
+                <div class="reviews"> <h2>What other readers Say</h2>  </div>
+            <%}%>
         </section>
 
     </main>

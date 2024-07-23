@@ -23,7 +23,7 @@ app.use(session({
   }))
   // authorization middleware
 app.use((req,res,next)=>{
-    const privateRoutes = ["/profile"] 
+    const privateRoutes = ["/profile", "/borrow"] 
     const adminRoutes = [ "/newauthor", "/aproveuser", "/completeorder" ]
    if(req.session && req.session.user){
     res.locals.user = req.session.user
@@ -135,7 +135,21 @@ app.get("/authors/:author",(req,res)=>{
 })
 app.get("/book/:isbn",(req,res)=>{
     console.log(req.params.isbn); // query parameters
-    res.send("hi there!!")
+    dbconn.query(`SELECT * FROM books WHERE isbn = ${req.params.isbn}`, (error, book)=>{
+        if(error){
+            console.log(error);
+            res.status(500).send("Server Error")
+        }else{
+            res.render("book.ejs", {book})
+        }
+    })
+})
+
+app.get("/borrow", (req,res)=>{
+    // check availability
+    // if available, create a new record
+    
+    res.send("Pick book at front desk")
 })
 
 
