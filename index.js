@@ -146,10 +146,29 @@ app.get("/book/:isbn",(req,res)=>{
 })
 
 app.get("/borrow", (req,res)=>{
-    // check availability
-    // if available, create a new record
-    
-    res.send("Pick book at front desk")
+    dbconn.query(`SELECT availability FROM books WHERE isbn = ${req.query.isbn}`, (error,result)=>{
+        if(error){
+            res.status(500).send("Server Error!")
+        }else{
+            if(result.length>0 && result[0].availability == "AVAILABLE"){
+                dbconn.query(`INSERT INTO records(Member,Book, DateBorrowed,ReturnDate) VALUES( ${req.session.user.MemberID}, ${req.query.isbn}, "2024-07-04", "2024-08-01")`, (sqlError)=>{
+                    if(sqlError){
+                        res.status(500).send("Server Errror")
+                    }else{
+                        dbconn.query(`UPDATE books SET availability = "UNAVAILABLE" WHERE isbn= ${req.query.isbn}`, (updateError)=>{
+                            if(updateError){
+                                res.status(500).send("Servre Error")
+                            }else{
+                                res.redirect("/profile?message=borrowed")
+                            }
+                        })
+                    }
+                })
+            }else{
+                res.send("Book Not Available")
+            }
+        }
+    })
 })
 
 
@@ -178,11 +197,16 @@ app.get("/books",(req,res)=>{
     })
 })
 app.get("/profile",(req,res)=>{
-    dbconn.query(`SELECT * FROM members WHERE MemberID = ${req.session.user.MemberID}`, (error , member)=>{
-        if(error){
-            res.status(500).send("Server Error")
+    dbconn.query(`select * from records join books on records.Book = books.isbn where member=${req.session.user.MemberID}`, (err,records)=>{
+        if(err){
+            console.log(err);
+            res.status(500).send("SErver Error")
         }else{
-            res.render("profile.ejs", {member: member[0]})
+            if(req.query.message){
+                res.render("profile.ejs", {records, message: true})
+            }else{
+                res.render("profile.ejs", {records})
+            }
         }
     })
 })
