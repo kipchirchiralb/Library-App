@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library App</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/profile.css">
 </head>
 <body>
     <%- include('header.ejs') %>
     <main>
         <section id="hero">
-            <h1><%= locals.user.FullName %></h1>   
+            <h1>Hello <%= locals.user.FullName %> . Happy Reading!!</h1>   
             <% if(locals.message){%>
                 <p style="background-color: green; color: white;text-align: center; padding: 12px;">Book Borrowed  Successfully!!!</p>
             <%}%>      
@@ -33,6 +35,7 @@
     </main>
     <footer>
         <p> LibApp &copy; <%= new Date().getFullYear() %> . All rights Reserved. </p>
+        <p>Library App</p>
     </footer>
 </body>
 </html>

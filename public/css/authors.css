@@ -1,0 +1,13 @@
+ul{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    list-style: none;
+}
+li{
+    border-bottom: 1px solid grey;
+    padding-bottom: 20px;
+}
+ul span{
+    font-weight: bold;
+}

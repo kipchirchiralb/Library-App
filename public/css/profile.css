@@ -1,0 +1,19 @@
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  td, th {
+    border: 1px solid aliceblue;
+    text-align: left;
+    padding: 8px;
+  }
+  
+  tr:nth-child(odd) {
+    background-color: aliceblue;
+  }
+
+  h1{
+    margin-bottom: 30px;
+  }

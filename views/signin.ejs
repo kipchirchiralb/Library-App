@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
     <%- include('header.ejs') %>
-    <h1>Sign In </h1>
+    <main>
+            <h1>Sign In </h1>
 
     <% if(locals.errorMessage){ %>
         <p style="color: orangered;"><%= locals.errorMessage%>  </p>
@@ -25,6 +27,13 @@
         </div>
         <input type="submit" value="Sign In">
     </form>
-    <p> Do not have an account? <a href="/signup">Sign Up</a> </p>    
+    <p> Do not have an account? <a href="/signup">Sign Up</a> </p>   
+
+    </main>
+    <footer>
+        <p> LibApp &copy; <%= new Date().getFullYear() %> . All rights Reserved. </p>
+        <p>Library App</p>
+    </footer>
+
 </body>
 </html>

@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign up</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
     <%- include('header.ejs') %>
-    <h1>Signup </h1>
+    <main>
+    <h1>Sign up </h1>
     <% if(locals.errorMessage){ %>
         <p style="color: orangered;"><%= locals.errorMessage%>  </p>
     <% } %>
@@ -43,6 +45,12 @@
 
     </form>
     <p> Already have an account? <a href="/signin">Sign In</a> </p>
+    </main>
+    <footer>
+        <p> LibApp &copy; <%= new Date().getFullYear() %> . All rights Reserved. </p>
+        <p>Library App</p>
+    </footer>
+
     <script>
         const passwordError = document.getElementById("passworderror")
         const passwordInput = document.getElementById("password")
@@ -61,5 +69,6 @@
                 }
         })
     </script>
+
 </body>
 </html>
