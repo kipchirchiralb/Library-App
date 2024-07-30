@@ -19,7 +19,7 @@
         <section id="hero">
             <h1>Authors</h1>
             <!-- optional chaining -->
-            <% if(locals?.user?.Email === "john@gmail.com"){ %>
+            <% if(locals.user?.Email === "john@gmail.com"){ %>
             <form action="/newauthor" method="post" >
                 <label for="id">ID</label>
                 <input type="number" name="id" id="id" required>

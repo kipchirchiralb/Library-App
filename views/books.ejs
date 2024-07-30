@@ -12,10 +12,36 @@
     <main>
         <section id="hero">
             <h1>Books</h1>
+            <!-- locals.user?.Email === "john@gmail.com" -->
+            <% if(true){ %>
+                <form action="/newbook" method="post" enctype="multipart/form-data" >
+                    <label for="isbn">ISBN</label>
+                    <input type="number" name="isbn" id="isbn" required>
+                    <label for="title">Title</label>
+                    <input type="text" name="title" id="title" required> <br>
+                    <label for="publication">Publication Year</label>
+                    <select name="publication" id="publication">
+                        <% for(let year = 2024; year>1870; year--){ %>
+                            <option value="<%=year%>"><%=year%></option>
+                        <%}%>
+                    </select>
+                    <input list="authors" id="author" name="author" required>
+                    <datalist id="authors">
+                        <% locals.authors.forEach(author=>{ %>
+                        <option value="<%= author.AuthorID%>-<%= author.FullName%>" >
+                        <% }) %>
+                    </datalist>  
+                    <label for="cover">Book Cover</label>
+                    <input type="file" name="cover" id="cover" required >
+                    <label for="synopsis">Synopsis</label>
+                    <textarea name="synopsis" id="synopsis" required></textarea>
+                    <input type="submit" value="Add Book">
+                </form>
+                <% } %>
             <div class="books">
-                  <% locals.books.forEach(book=>{ %>
+                  <% locals.books.reverse().forEach(book=>{ %>
                         <div class="book" id="book-<%=book.isbn%>">
-                                <img src="/images/cover1.png" alt="Cover for <%=book.title %>">
+                                <img src="/images/covers/<%=book.cover%>" alt="Cover for <%=book.title %>">
                                 <a href="/book/<%=book.isbn%>">
                                     <h2><%= book.title%></h2>
                                 </a>

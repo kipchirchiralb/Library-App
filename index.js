@@ -3,6 +3,9 @@ const bcrypt = require('bcrypt');
 const session = require("express-session")
 const mysql = require("mysql")
 const path = require("path")
+const multer  = require('multer')
+const upload = multer({ dest: 'public/images/covers' })
+
 const dbconn = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -22,6 +25,7 @@ app.use(session({
     cookie: { secure: false }
   }))
   // authorization middleware
+  // JWT -- authentication
 app.use((req,res,next)=>{
     const privateRoutes = ["/profile", "/borrow"] 
     const adminRoutes = [ "/newauthor", "/aproveuser", "/completeorder" ]
@@ -108,6 +112,7 @@ app.post("/signup", (req,res)=>{
         }
     })
  })
+// PAGINATION
 
 app.get("/logout", (req,res)=>{
     req.session.destroy(err=>{
@@ -186,13 +191,34 @@ app.post("/newauthor",(req,res)=>{
         }
     })
 })
+app.post("/newbook", upload.single("cover"), (req,res)=>{
+    console.log(req.file);
+    // insert new file
+    console.log(req.body.author.split("-")[0]) // number -- author id
+    dbconn.query(`INSERT INTO books(isbn,title,synopsis,author,publication,availability,cover) VALUES("${req.body.isbn}", "${req.body.title}","${req.body.synopsis}","${req.body.author.split("-")[0]}", ${req.body.publication},"AVAILABLE", "${req.file.filename}")`, (sqlErr)=>{
+        if(sqlErr){
+            
+            res.status(500).send("Server Error - sql insert into books")
+        }else{
+            res.redirect("/books")
+        }
+    })
+})
+
+
 // joins and types of joins in sql with examples
 app.get("/books",(req,res)=>{
     dbconn.query("SELECT * FROM books JOIN authors ON books.author = authors.AuthorID", (err,books)=>{
         if(err){
             res.status(500).send("Server Error")
         }else{
-            res.render("books.ejs", {books})
+            dbconn.query("SELECT * from authors", (selectErr, authors)=>{
+                if(selectErr){
+                    res.status(500).send("Server Error")
+                }else{
+                    res.render("books.ejs", {books, authors})
+                }
+            })            
         }
     })
 })
