@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Profile</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <%- include('header.ejs') %>
+    <main>
+    <h1>Update Profile </h1>
+    <% if(locals.errorMessage){ %>
+        <p style="color: orangered;"><%= locals.errorMessage%>  </p>
+    <% } %>
+    <style>
+        input{
+            background: transparent;
+        }
+        input:disabled{
+            color: white;
+        }
+    </style>
+
+    <form action="/updateprofile" method="post">
+        <div>
+            <label for="fullname">Full Name</label>
+            <input value="<%=locals.user.FullName%>" type="text"  name="fullname" id="fullname"  required>
+        </div>
+        <div>
+            <label for="address">Home Address</label>
+            <input value="<%=locals.user.Address%>" type="text" name="address" id="address" required>
+        </div>
+        <div>
+            <label for="phone">Phone Number</label>
+            <input value="<%=locals.user.Phone%>" type="text" name="phone" id="phone" required>
+        </div>
+        <div>
+            <label for="email">Email</label>
+            <input value="<%=locals.user.Email%>" type="email" name="email" id="email" required>
+        </div>
+        <div>
+            <label for="club">Book Club</label>
+            <select name="club" id="club">
+                <% clubs.forEach(club=>{ %>
+                    <option value="<%= club.ClubID %>"> <%= club.ClubName %> :- <%= club.NumberOfMembers%> Members </option>
+                <%  }) %>
+            </select>
+        </div>
+        <input type="submit" value="Update">
+    </form>
+    <p> Reset Password <a href="/resetpassword">here</a> </p>
+    </main>
+    <footer>
+        <p> LibApp &copy; <%= new Date().getFullYear() %> . All rights Reserved. </p>
+        <p>Library App</p>
+    </footer>
+
+    <script>
+        const passwordError = document.getElementById("passworderror")
+        const passwordInput = document.getElementById("password")
+        passwordInput.addEventListener("input", ()=>{
+                if(passwordInput.value.length<8){
+                    passwordError.textContent = "Password must be over 8 charachters"
+                }else{
+                    passwordError.textContent = ""
+                }
+        })
+        document.getElementById("confirmpassword").addEventListener("input", ()=>{
+            if(passwordInput.value!== document.getElementById("confirmpassword").value){
+                    passwordError.textContent = "Password AND cONFIRM PASSWORD MUST MATCH"
+                }else{
+                    passwordError.textContent = ""
+                }
+        })
+    </script>
+
+</body>
+</html>

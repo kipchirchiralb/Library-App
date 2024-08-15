@@ -27,7 +27,7 @@ app.use(session({
   // authorization middleware
   // JWT -- authentication
 app.use((req,res,next)=>{
-    const privateRoutes = ["/profile", "/borrow"] 
+    const privateRoutes = ["/profile", "/borrow", "/updateprofile"] 
     const adminRoutes = [ "/newauthor", "/aproveuser", "/completeorder" ]
    if(req.session && req.session.user){
     res.locals.user = req.session.user
@@ -236,6 +236,17 @@ app.get("/profile",(req,res)=>{
         }
     })
 })
+
+
+app.get("/updateprofile", (req,res)=>{
+    dbconn.query("SELECT * FROM clubs", (err,clubs)=>{
+        res.render("updateprofile.ejs", {clubs})
+    })
+})
+app.post("/updateprofile", (req,res)=>{
+    dbconn.query(`UPDATE TABLE members SET `)
+})
+
 
 // last route - 404 page
 app.get("*", (req,res)=>{

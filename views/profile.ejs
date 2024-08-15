@@ -11,7 +11,10 @@
     <%- include('header.ejs') %>
     <main>
         <section id="hero">
-            <h1>Hello <%= locals.user.FullName %> . Happy Reading!!</h1>   
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <h1>Hello <%= locals.user.FullName %> . Happy Reading!!</h1>  
+                <a href="/updateprofile">   Update Profile  <ion-icon name="create-outline"></ion-icon></a> 
+            </div>
             <% if(locals.message){%>
                 <p style="background-color: green; color: white;text-align: center; padding: 12px;">Book Borrowed  Successfully!!!</p>
             <%}%>      
@@ -37,5 +40,7 @@
         <p> LibApp &copy; <%= new Date().getFullYear() %> . All rights Reserved. </p>
         <p>Library App</p>
     </footer>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 </html>
